@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuiping Huo - Open Source Contributions</title>
+<style>
+  :root {
+    --primary: #e00;
+    --bg: #0f1117;
+    --bg-card: #1a1d28;
+    --text: #e4e4e7;
+    --text-muted: #9ca3af;
+    --border: #2a2d3a;
+    --blue: #3b82f6;
+    --green: #22c55e;
+    --purple: #a855f7;
+    --orange: #f59e0b;
+    --cyan: #06b6d4;
+    --pink: #ec4899;
+    --teal: #14b8a6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  /* Language toggle */
+  #lang-toggle { display: none; }
+  .lang-cn { display: none; }
+  #lang-toggle:checked ~ * .lang-en,
+  #lang-toggle:checked ~ footer .lang-en { display: none; }
+  #lang-toggle:checked ~ * .lang-cn,
+  #lang-toggle:checked ~ footer .lang-cn { display: inline; }
+  .lang-switch { display: flex; gap: 0; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+  .lang-switch label { padding: 7px 16px; font-size: 0.85rem; cursor: pointer; color: var(--text-muted); background: transparent; user-select: none; transition: all 0.2s; }
+  .lang-switch .lbl-en { background: var(--primary); color: #fff; font-weight: 600; }
+  #lang-toggle:checked ~ header .lang-switch .lbl-en { background: transparent; color: var(--text-muted); font-weight: 400; }
+  #lang-toggle:checked ~ header .lang-switch .lbl-cn { background: var(--primary); color: #fff; font-weight: 600; }
+
+  /* Header */
+  header { background: linear-gradient(135deg, #1a1d28 0%, #0f1117 100%); border-bottom: 1px solid var(--border); padding: 48px 0 40px; position: relative; }
+  header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--primary), var(--orange), var(--blue), var(--purple)); }
+  .header-content { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; flex-wrap: wrap; }
+  .header-left h1 { font-size: 2.2rem; font-weight: 700; }
+  .header-left .subtitle { color: var(--text-muted); font-size: 1.05rem; margin-top: 6px; }
+  .header-left .subtitle strong { color: var(--primary); font-weight: 600; }
+  .header-links { display: flex; gap: 16px; margin-top: 8px; }
+  .header-link { display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted); text-decoration: none; font-size: 0.9rem; }
+  .header-link svg { width: 16px; height: 16px; fill: currentColor; }
+  .header-link:hover { color: var(--primary); }
+
+  /* Stats */
+  .stats-bar { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin: -30px 0 32px; position: relative; z-index: 1; }
+  .stat-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: center; }
+  .stat-number { font-size: 2rem; font-weight: 700; background: linear-gradient(135deg, var(--primary), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .stat-label { color: var(--text-muted); font-size: 0.85rem; margin-top: 4px; }
+
+  /* Sections */
+  section { margin-bottom: 48px; }
+  .section-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
+  .section-title::before { content: ''; width: 4px; height: 24px; background: var(--primary); border-radius: 2px; }
+
+  /* Summary box */
+  .summary-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 32px; margin-bottom: 32px; border-left: 4px solid var(--primary); }
+  .summary-box p { color: var(--text-muted); font-size: 1.05rem; line-height: 1.8; margin-bottom: 20px; }
+  .characteristics { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin-top: 16px; }
+  .char-item { background: rgba(238,0,0,0.1); border: 1px solid rgba(238,0,0,0.3); padding: 12px 16px; border-radius: 8px; font-size: 0.9rem; color: var(--text); }
+
+  /* Charts */
+  .chart-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+  .chart-box h3 { font-size: 1rem; color: var(--text-muted); margin-bottom: 16px; font-weight: 500; }
+  .bar-item { margin-bottom: 16px; }
+  .bar-label { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.9rem; }
+  .bar-label-text { color: var(--text); }
+  .bar-label-count { color: var(--text-muted); }
+  .bar-container { background: #1e2030; height: 22px; border-radius: 11px; overflow: hidden; position: relative; }
+  .bar-fill { height: 100%; border-radius: 11px; position: relative; }
+  .bar-fill.c1 { background: var(--primary); }
+  .bar-fill.c2 { background: var(--blue); }
+  .bar-fill.c3 { background: var(--green); }
+  .bar-fill.c4 { background: var(--purple); }
+  .bar-fill.c5 { background: var(--orange); }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+  .timeline-item { position: relative; margin-bottom: 32px; padding-left: 20px; }
+  .timeline-item::before { content: ''; position: absolute; left: -24px; top: 6px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--primary); background: var(--bg); }
+  .timeline-item.major::before { background: var(--primary); box-shadow: 0 0 0 4px rgba(238,0,0,0.2); }
+  .timeline-year { font-weight: 700; font-size: 1.1rem; color: var(--primary); margin-bottom: 8px; }
+  .timeline-focus { color: var(--text); font-weight: 600; margin-bottom: 8px; }
+  .timeline-desc { color: var(--text-muted); font-size: 0.88rem; line-height: 1.7; }
+  .timeline-desc ul { margin: 8px 0 0 20px; }
+  .timeline-desc li { margin-bottom: 4px; }
+
+  /* Skills */
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 16px; }
+  .skill-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .skill-card h4 { font-size: 0.95rem; margin-bottom: 12px; color: var(--text); }
+  .skill-card ul { list-style: none; }
+  .skill-card li { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 6px; padding-left: 12px; position: relative; }
+  .skill-card li::before { content: '▸'; position: absolute; left: 0; color: var(--primary); }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .skill-tag { font-size: 0.75rem; padding: 4px 12px; border-radius: 100px; background: #1e2030; color: var(--text-muted); border: 1px solid var(--border); }
+  .skill-tag.primary { background: rgba(238,0,0,0.15); color: var(--primary); border-color: rgba(238,0,0,0.3); }
+
+  /* Highlights */
+  .highlight-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; margin-bottom: 32px; }
+  .highlight-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+  .highlight-card h4 { font-size: 1rem; margin-bottom: 8px; color: var(--text); }
+  .highlight-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* Repo list */
+  .repo-list { display: grid; gap: 16px; }
+  .repo-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; border-left: 3px solid var(--blue); }
+  .repo-name { font-weight: 600; color: var(--text); font-size: 1rem; margin-bottom: 6px; }
+  .repo-stats { color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; }
+
+  footer { border-top: 1px solid var(--border); padding: 24px 0; text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: 48px; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .container { padding: 0 16px; }
+    .stats-bar { grid-template-columns: repeat(2,1fr); gap: 10px; }
+    .stat-card { padding: 16px 12px; }
+    .stat-number { font-size: 1.5rem; }
+    .highlight-grid { grid-template-columns: 1fr; }
+    .characteristics { grid-template-columns: 1fr; }
+    .header-left h1 { font-size: 1.6rem; }
+    header { padding: 32px 0 28px; }
+    .skills-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<input type="checkbox" id="lang-toggle">
+
+<header>
+  <div class="container">
+    <div class="header-content">
+      <div class="header-left">
+        <h1><span class="lang-en">Cuiping Huo</span><span class="lang-cn">霍翠平（Cuiping Huo）</span></h1>
+        <div class="subtitle">
+          <strong class="lang-en">Senior Software Quality Engineer</strong><strong class="lang-cn">高级软件质量工程师</strong>
+          <span class="lang-en"> at </span><span class="lang-cn"> @ </span><strong>Red Hat<span class="lang-cn">（红帽）</span></strong>
+          &nbsp;|&nbsp;
+          <span class="lang-en">Test Automation & Supply Chain Security Specialist | RHCA</span>
+          <span class="lang-cn">测试自动化与供应链安全专家 | 红帽认证架构师</span>
+        </div>
+        <div class="header-links">
+          <a class="header-link" href="https://github.com/cuipinghuo" target="_blank">
+            <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            github.com/cuipinghuo
+          </a>
+          <a class="header-link" href="https://www.linkedin.com/in/cuiping-huo-she-her-70b11b27/" target="_blank">
+            <svg viewBox="0 0 16 16"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
+            <span class="lang-en">LinkedIn</span><span class="lang-cn">领英</span>
+          </a>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="lang-switch">
+          <label class="lbl-en" for="lang-toggle">EN</label>
+          <label class="lbl-cn" for="lang-toggle">CN</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="container" style="padding-top: 54px;">
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-card"><div class="stat-number">145</div><div class="stat-label"><span class="lang-en">Total PRs</span><span class="lang-cn">拉取请求总数</span></div></div>
+    <div class="stat-card"><div class="stat-number">71%</div><div class="stat-label"><span class="lang-en">Merge Rate</span><span class="lang-cn">合并率</span></div></div>
+    <div class="stat-card"><div class="stat-number">28</div><div class="stat-label"><span class="lang-en">Repositories</span><span class="lang-cn">代码仓库</span></div></div>
+    <div class="stat-card"><div class="stat-number">6+</div><div class="stat-label"><span class="lang-en">Years (2019-2025)</span><span class="lang-cn">年（2019-2025）</span></div></div>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary-box">
+    <p class="lang-en">
+      Quality-focused Software Engineer with deep expertise in test automation, supply chain security, and cloud-native platforms.
+      6+ years of experience in the OpenShift/Kubernetes ecosystem with a proven track record of improving software quality
+      through comprehensive testing, systematic automation, and careful attention to security and compliance requirements.
+    </p>
+    <p class="lang-cn">
+      专注于质量的软件工程师，在测试自动化、供应链安全和云原生平台方面拥有深厚的专业知识。
+      在 OpenShift/Kubernetes 生态系统拥有 6 年以上的经验，通过全面的测试、系统化的自动化以及对安全和合规性要求的
+      精心关注，拥有提高软件质量的良好记录。
+    </p>
+    <div class="characteristics">
+      <div class="char-item"><span class="lang-en">✅ Test-driven development (26% testing-focused PRs)</span><span class="lang-cn">✅ 测试驱动开发（26% 的 PR 专注于测试）</span></div>
+      <div class="char-item"><span class="lang-en">✅ High-quality contributions (71% merge rate)</span><span class="lang-cn">✅ 高质量贡献（71% 合并率）</span></div>
+      <div class="char-item"><span class="lang-en">✅ Systematic automation approach</span><span class="lang-cn">✅ 系统化自动化方法</span></div>
+      <div class="char-item"><span class="lang-en">✅ Multi-organization collaboration</span><span class="lang-cn">✅ 多组织协作</span></div>
+    </div>
+  </div>
+
+  <!-- Top Repositories -->
+  <section>
+    <div class="section-title"><span class="lang-en">Top Contributing Repositories</span><span class="lang-cn">主要贡献仓库</span></div>
+    <div class="chart-box">
+      <h3><span class="lang-en">PRs by Repository (Top 5)</span><span class="lang-cn">各仓库 PR 数量（前 5）</span></h3>
+      <div class="bar-item">
+        <div class="bar-label">
+          <span class="bar-label-text">openshift/openshift-tests-private</span>
+          <span class="bar-label-count"><span class="lang-en">37 PRs</span><span class="lang-cn">37 个 PR</span></span>
+        </div>
+        <div class="bar-container">
+          <div class="bar-fill c1" style="width: 100%"></div>
+        </div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">
+          <span class="bar-label-text">konflux-ci/e2e-tests</span>
+          <span class="bar-label-count"><span class="lang-en">31 PRs</span><span class="lang-cn">31 个 PR</span></span>
+        </div>
+        <div class="bar-container">
+          <div class="bar-fill c2" style="width: 84%"></div>
+        </div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">
+          <span class="bar-label-text">conforma/cli <span class="lang-cn">（企业合约）</span><span class="lang-en">(Enterprise Contract)</span></span>
+          <span class="bar-label-count"><span class="lang-en">22 PRs</span><span class="lang-cn">22 个 PR</span></span>
+        </div>
+        <div class="bar-container">
+          <div class="bar-fill c3" style="width: 59%"></div>
+        </div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">
+          <span class="bar-label-text">openshift/* <span class="lang-en">(other repos)</span><span class="lang-cn">（其他仓库）</span></span>
+          <span class="bar-label-count"><span class="lang-en">15 PRs</span><span class="lang-cn">15 个 PR</span></span>
+        </div>
+        <div class="bar-container">
+          <div class="bar-fill c4" style="width: 41%"></div>
+        </div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">
+          <span class="bar-label-text">cuipinghuo/python-sample</span>
+          <span class="bar-label-count"><span class="lang-en">7 PRs</span><span class="lang-cn">7 个 PR</span></span>
+        </div>
+        <div class="bar-container">
+          <div class="bar-fill c5" style="width: 19%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="repo-list">
+      <div class="repo-item">
+        <div class="repo-name">openshift/openshift-tests-private</div>
+        <div class="repo-stats">
+          <span class="lang-en">37 PRs (31 merged, 84% merge rate) • Operator SDK testing, OLM automation, Service Catalog</span>
+          <span class="lang-cn">37 个 PR（31 个已合并，84% 合并率）• Operator SDK 测试、OLM 自动化、服务目录</span>
+        </div>
+      </div>
+      <div class="repo-item">
+        <div class="repo-name">konflux-ci/e2e-tests</div>
+        <div class="repo-stats">
+          <span class="lang-en">31 PRs (26 merged, 84% merge rate) • E2E testing, Enterprise Contract validation, Release testing</span>
+          <span class="lang-cn">31 个 PR（26 个已合并，84% 合并率）• E2E 测试、企业合约验证、发布测试</span>
+        </div>
+      </div>
+      <div class="repo-item">
+        <div class="repo-name">conforma/cli</div>
+        <div class="repo-stats">
+          <span class="lang-en">22 PRs (21 merged, 95% merge rate) • Enterprise Contract CLI, Policy validation, VSA handling</span>
+          <span class="lang-cn">22 个 PR（21 个已合并，95% 合并率）• 企业合约 CLI、策略验证、VSA 处理</span>
+        </div>
+      </div>
+      <div class="repo-item">
+        <div class="repo-name">conforma/knative-service</div>
+        <div class="repo-stats">
+          <span class="lang-en">2 PRs (2 merged, 100% merge rate) • Acceptance testing for Knative services</span>
+          <span class="lang-cn">2 个 PR（2 个已合并，100% 合并率）• Knative 服务验收测试</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technical Expertise -->
+  <section>
+    <div class="section-title"><span class="lang-en">Technical Expertise</span><span class="lang-cn">技术专长</span></div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <h4><span class="lang-en">Testing & QA (Primary Strength)</span><span class="lang-cn">测试与质量保证（核心优势）</span></h4>
+        <ul>
+          <li><span class="lang-en">Unit testing (Go, Python)</span><span class="lang-cn">单元测试（Go、Python）</span></li>
+          <li><span class="lang-en">Integration & E2E testing</span><span class="lang-cn">集成与端到端测试</span></li>
+          <li><span class="lang-en">Acceptance testing</span><span class="lang-cn">验收测试</span></li>
+          <li><span class="lang-en">Test automation frameworks</span><span class="lang-cn">测试自动化框架</span></li>
+          <li><span class="lang-en">Test coverage improvement</span><span class="lang-cn">测试覆盖率提升</span></li>
+        </ul>
+      </div>
+
+      <div class="skill-card">
+        <h4><span class="lang-en">Supply Chain Security</span><span class="lang-cn">供应链安全</span></h4>
+        <ul>
+          <li><span class="lang-en">Enterprise Contract (EC) tooling</span><span class="lang-cn">企业合约（EC）工具</span></li>
+          <li><span class="lang-en">Policy validation & compliance</span><span class="lang-cn">策略验证与合规性</span></li>
+          <li><span class="lang-en">VSA (Verification Summary Attestation)</span><span class="lang-cn">VSA（验证摘要证明）</span></li>
+          <li><span class="lang-en">OPA (Open Policy Agent)</span><span class="lang-cn">OPA（开放策略代理）</span></li>
+          <li><span class="lang-en">Rego policy-as-code</span><span class="lang-cn">Rego 策略即代码</span></li>
+        </ul>
+      </div>
+
+      <div class="skill-card">
+        <h4>OpenShift/Kubernetes</h4>
+        <ul>
+          <li><span class="lang-en">Operator SDK testing</span><span class="lang-cn">Operator SDK 测试</span></li>
+          <li><span class="lang-en">OLM (Operator Lifecycle Manager)</span><span class="lang-cn">OLM（Operator 生命周期管理器）</span></li>
+          <li><span class="lang-en">Marketplace testing</span><span class="lang-cn">市场测试</span></li>
+          <li><span class="lang-en">Service Catalog</span><span class="lang-cn">服务目录</span></li>
+          <li><span class="lang-en">Knative services</span><span class="lang-cn">Knative 服务</span></li>
+        </ul>
+      </div>
+
+      <div class="skill-card">
+        <h4>DevOps & CI/CD</h4>
+        <ul>
+          <li><span class="lang-en">Tekton Pipelines</span><span class="lang-cn">Tekton 流水线</span></li>
+          <li><span class="lang-en">GitOps workflows</span><span class="lang-cn">GitOps 工作流</span></li>
+          <li><span class="lang-en">Release management</span><span class="lang-cn">发布管理</span></li>
+          <li>GitHub Actions</li>
+          <li><span class="lang-en">Build automation</span><span class="lang-cn">构建自动化</span></li>
+        </ul>
+      </div>
+
+      <div class="skill-card">
+        <h4><span class="lang-en">Programming Languages</span><span class="lang-cn">编程语言</span></h4>
+        <ul>
+          <li><span class="lang-en">Go (Primary)</span><span class="lang-cn">Go（主要）</span></li>
+          <li>Python</li>
+          <li>Ruby (Cucumber)</li>
+          <li>Rego</li>
+          <li><span class="lang-en">Bash scripting</span><span class="lang-cn">Bash 脚本</span></li>
+        </ul>
+      </div>
+
+      <div class="skill-card">
+        <h4><span class="lang-en">Tools & Platforms</span><span class="lang-cn">工具与平台</span></h4>
+        <ul>
+          <li>Git & GitHub</li>
+          <li>Konflux CI</li>
+          <li><span class="lang-en">Red Hat OpenShift</span><span class="lang-cn">红帽 OpenShift</span></li>
+          <li>Kubernetes</li>
+          <li>Docker/Podman</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="skill-tags" style="margin-top: 24px;">
+      <span class="skill-tag primary">Go</span>
+      <span class="skill-tag primary">Python</span>
+      <span class="skill-tag primary"><span class="lang-en">Testing</span><span class="lang-cn">测试</span></span>
+      <span class="skill-tag primary"><span class="lang-en">Enterprise Contract</span><span class="lang-cn">企业合约</span></span>
+      <span class="skill-tag">Kubernetes</span>
+      <span class="skill-tag">OpenShift</span>
+      <span class="skill-tag">Tekton</span>
+      <span class="skill-tag">OPA/Rego</span>
+      <span class="skill-tag">Ginkgo</span>
+      <span class="skill-tag">Cucumber</span>
+      <span class="skill-tag">GitOps</span>
+      <span class="skill-tag">Operator SDK</span>
+      <span class="skill-tag">Knative</span>
+      <span class="skill-tag">SLSA</span>
+      <span class="skill-tag"><span class="lang-en">Supply Chain Security</span><span class="lang-cn">供应链安全</span></span>
+    </div>
+  </section>
+
+  <!-- Contribution Timeline -->
+  <section>
+    <div class="section-title"><span class="lang-en">Contribution Timeline</span><span class="lang-cn">贡献时间线</span></div>
+    <div class="timeline">
+      <div class="timeline-item major">
+        <div class="timeline-year"><span class="lang-en">2024-2025: Current Phase</span><span class="lang-cn">2024-2025：当前阶段</span></div>
+        <div class="timeline-focus"><span class="lang-en">Focus: Enterprise Contract maturation & GitOps workflows</span><span class="lang-cn">重点：企业合约成熟化与 GitOps 工作流</span></div>
+        <div class="timeline-desc">
+          <strong><span class="lang-en">Highlights:</span><span class="lang-cn">亮点：</span></strong>
+          <ul>
+            <li><span class="lang-en">VSA upload error handling acceptance tests</span><span class="lang-cn">VSA 上传错误处理验收测试</span></li>
+            <li><span class="lang-en">Comprehensive unit tests for attestation, validation, and policy packages</span><span class="lang-cn">针对认证、验证和策略包的全面单元测试</span></li>
+            <li><span class="lang-en">Knative service acceptance testing</span><span class="lang-cn">Knative 服务验收测试</span></li>
+            <li><span class="lang-en">Multi-language GitOps sample applications (Go, Python, Node.js)</span><span class="lang-cn">多语言 GitOps 示例应用（Go、Python、Node.js）</span></li>
+            <li><span class="lang-en">Release automation and promotion pipelines</span><span class="lang-cn">发布自动化和升级流水线</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item major">
+        <div class="timeline-year"><span class="lang-en">2022-2024: Enterprise Contract Era</span><span class="lang-cn">2022-2024：企业合约时代</span></div>
+        <div class="timeline-focus"><span class="lang-en">Focus: Enterprise Contract (EC) tooling & supply chain security</span><span class="lang-cn">重点：企业合约（EC）工具与供应链安全</span></div>
+        <div class="timeline-desc">
+          <strong><span class="lang-en">Highlights:</span><span class="lang-cn">亮点：</span></strong>
+          <ul>
+            <li><span class="lang-en">Major contributor to conforma/cli (22 PRs, 95% merge rate)</span><span class="lang-cn">conforma/cli 主要贡献者（22 个 PR，95% 合并率）</span></li>
+            <li><span class="lang-en">OPA policy engine integration and testing</span><span class="lang-cn">OPA 策略引擎集成与测试</span></li>
+            <li><span class="lang-en">Policy cache implementation testing</span><span class="lang-cn">策略缓存实现测试</span></li>
+            <li><span class="lang-en">VSA validation framework development</span><span class="lang-cn">VSA 验证框架开发</span></li>
+            <li><span class="lang-en">konflux-ci/e2e-tests consolidation and EC test coverage</span><span class="lang-cn">konflux-ci/e2e-tests 整合与 EC 测试覆盖</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-year"><span class="lang-en">2021-2022: Transition Period</span><span class="lang-cn">2021-2022：过渡时期</span></div>
+        <div class="timeline-focus"><span class="lang-en">Focus: Bridging OpenShift testing to Enterprise Contract</span><span class="lang-cn">重点：从 OpenShift 测试过渡到企业合约</span></div>
+        <div class="timeline-desc">
+          <strong><span class="lang-en">Highlights:</span><span class="lang-cn">亮点：</span></strong>
+          <ul>
+            <li><span class="lang-en">Started work on Enterprise Contract e2e tests</span><span class="lang-cn">开始企业合约端到端测试工作</span></li>
+            <li><span class="lang-en">Build chain validation and attestation testing</span><span class="lang-cn">构建链验证和认证测试</span></li>
+            <li><span class="lang-en">CODEOWNER and PR review process improvements</span><span class="lang-cn">CODEOWNER 和 PR 审查流程改进</span></li>
+            <li><span class="lang-en">Cross-repository collaboration on infra-deployments</span><span class="lang-cn">基础设施部署的跨仓库协作</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item major">
+        <div class="timeline-year"><span class="lang-en">2019-2021: OpenShift Testing Foundation</span><span class="lang-cn">2019-2021：OpenShift 测试基础</span></div>
+        <div class="timeline-focus"><span class="lang-en">Focus: OpenShift platform testing & Operator SDK automation</span><span class="lang-cn">重点：OpenShift 平台测试与 Operator SDK 自动化</span></div>
+        <div class="timeline-desc">
+          <strong><span class="lang-en">Highlights:</span><span class="lang-cn">亮点：</span></strong>
+          <ul>
+            <li><span class="lang-en">37 PRs to openshift-tests-private (primary contributor)</span><span class="lang-cn">openshift-tests-private 37 个 PR（主要贡献者）</span></li>
+            <li><span class="lang-en">Systematic test case automation (pattern: "auto ocp-XXXXX")</span><span class="lang-cn">系统化测试用例自动化（模式："auto ocp-XXXXX"）</span></li>
+            <li><span class="lang-en">Operator SDK scorecard testing migration</span><span class="lang-cn">Operator SDK 记分卡测试迁移</span></li>
+            <li><span class="lang-en">OLM, Marketplace, and Service Catalog test coverage</span><span class="lang-cn">OLM、市场和服务目录测试覆盖</span></li>
+            <li><span class="lang-en">ASB (Ansible Service Broker) stage cases migration</span><span class="lang-cn">ASB（Ansible Service Broker）阶段用例迁移</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Impact & Achievements -->
+  <section>
+    <div class="section-title"><span class="lang-en">Impact & Achievements</span><span class="lang-cn">影响与成就</span></div>
+    <div class="highlight-grid">
+      <div class="highlight-card">
+        <h4><span class="lang-en">Test Coverage Leadership</span><span class="lang-cn">测试覆盖率领导力</span></h4>
+        <p class="lang-en">Created comprehensive unit test suites covering critical packages in Enterprise Contract CLI, including attestation, validation, policy, OPA, and certificate operations. 38+ PRs directly focused on improving test coverage.</p>
+        <p class="lang-cn">为企业合约 CLI 创建全面的单元测试套件，涵盖认证、验证、策略、OPA 和证书操作等关键包。38+ 个 PR 直接专注于提升测试覆盖率。</p>
+      </div>
+
+      <div class="highlight-card">
+        <h4><span class="lang-en">Supply Chain Security</span><span class="lang-cn">供应链安全</span></h4>
+        <p class="lang-en">Pioneered VSA (Verification Summary Attestation) testing and error handling, establishing robust validation frameworks for supply chain compliance and security attestations.</p>
+        <p class="lang-cn">开创性的 VSA（验证摘要证明）测试和错误处理，为供应链合规性和安全认证建立了强大的验证框架。</p>
+      </div>
+
+      <div class="highlight-card">
+        <h4><span class="lang-en">Cross-Organization Collaboration</span><span class="lang-cn">跨组织协作</span></h4>
+        <p class="lang-en">Successfully contributed across multiple organizations (Red Hat OpenShift, Konflux CI, Conforma) with consistently high merge rates, demonstrating strong collaboration skills and code quality.</p>
+        <p class="lang-cn">成功跨多个组织（红帽 OpenShift、Konflux CI、Conforma）贡献，具有持续高合并率，展示了强大的协作技能和代码质量。</p>
+      </div>
+
+      <div class="highlight-card">
+        <h4><span class="lang-en">Systematic Automation</span><span class="lang-cn">系统化自动化</span></h4>
+        <p class="lang-en">Developed systematic approaches to test automation, evidenced by pattern-based test case migration ("auto ocp-XXXXX" series) covering dozens of Operator SDK and OpenShift platform scenarios.</p>
+        <p class="lang-cn">开发了系统化的测试自动化方法，通过基于模式的测试用例迁移（"auto ocp-XXXXX"系列）覆盖数十个 Operator SDK 和 OpenShift 平台场景。</p>
+      </div>
+
+      <div class="highlight-card">
+        <h4><span class="lang-en">Quality Metrics Excellence</span><span class="lang-cn">质量指标卓越</span></h4>
+        <p class="lang-en">Achieved 71% overall merge rate with 95% for Enterprise Contract CLI contributions, demonstrating exceptional code quality and thorough review process adherence.</p>
+        <p class="lang-cn">实现 71% 的整体合并率，企业合约 CLI 贡献达到 95%，展示了卓越的代码质量和全面的审查流程遵守。</p>
+      </div>
+
+      <div class="highlight-card">
+        <h4><span class="lang-en">Long-term Commitment</span><span class="lang-cn">长期承诺</span></h4>
+        <p class="lang-en">6+ years of continuous contribution to OpenShift/Kubernetes ecosystem, evolving from platform testing to cutting-edge supply chain security tooling.</p>
+        <p class="lang-cn">6 年以上持续贡献 OpenShift/Kubernetes 生态系统，从平台测试发展到前沿供应链安全工具。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PR Types -->
+  <section>
+    <div class="section-title"><span class="lang-en">Contribution Analysis</span><span class="lang-cn">贡献分析</span></div>
+    <div class="chart-box">
+      <h3><span class="lang-en">PR Types Breakdown</span><span class="lang-cn">PR 类型分布</span></h3>
+      <div class="bar-item">
+        <div class="bar-label">
+          <span class="bar-label-text"><span class="lang-en">Testing (unit, e2e, acceptance)</span><span class="lang-cn">测试（单元、端到端、验收）</span></span>
+          <span class="bar-label-count"><span class="lang-en">38 PRs (26%)</span><span class="lang-cn">38 个 PR (26%)</span></span>
+        </div>
+        <div class="bar-container">
+          <div class="bar-fill c1" style="width: 26%"></div>
+        </div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">
+          <span class="bar-label-text"><span class="lang-en">Bug Fixes</span><span class="lang-cn">错误修复</span></span>
+          <span class="bar-label-count"><span class="lang-en">~35 PRs (24%)</span><span class="lang-cn">~35 个 PR (24%)</span></span>
+        </div>
+        <div class="bar-container">
+          <div class="bar-fill c2" style="width: 24%"></div>
+        </div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">
+          <span class="bar-label-text"><span class="lang-en">Features & Enhancements</span><span class="lang-cn">功能与增强</span></span>
+          <span class="bar-label-count"><span class="lang-en">~30 PRs (21%)</span><span class="lang-cn">~30 个 PR (21%)</span></span>
+        </div>
+        <div class="bar-container">
+          <div class="bar-fill c3" style="width: 21%"></div>
+        </div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">
+          <span class="bar-label-text"><span class="lang-en">Refactoring & Cleanup</span><span class="lang-cn">重构与清理</span></span>
+          <span class="bar-label-count"><span class="lang-en">~20 PRs (14%)</span><span class="lang-cn">~20 个 PR (14%)</span></span>
+        </div>
+        <div class="bar-container">
+          <div class="bar-fill c4" style="width: 14%"></div>
+        </div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">
+          <span class="bar-label-text"><span class="lang-en">Documentation & Configuration</span><span class="lang-cn">文档与配置</span></span>
+          <span class="bar-label-count"><span class="lang-en">~22 PRs (15%)</span><span class="lang-cn">~22 个 PR (15%)</span></span>
+        </div>
+        <div class="bar-container">
+          <div class="bar-fill c5" style="width: 15%"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="container">
+    <p><span class="lang-en">Generated from GitHub PR data (2019-2025) • Last updated: April 2026</span><span class="lang-cn">基于 GitHub PR 数据生成（2019-2025）• 最后更新：2026年4月</span></p>
+    <p style="margin-top: 8px;"><span class="lang-en">Total PRs Analyzed: 145 from 28 repositories across 4 organizations</span><span class="lang-cn">共分析 145 个 PR，来自 4 个组织的 28 个代码仓库</span></p>
+  </div>
+</footer>
+
+</body>
+</html>
