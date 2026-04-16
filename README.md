@@ -15,7 +15,7 @@ Both versions include EN/CN language toggle.
 
 ## Features
 
-- 📊 145 GitHub PRs analyzed across 6+ years
+- 📊 206 commits & 145 PRs from 37 repositories across 7+ years (2019-present)
 - 🌐 Bilingual (English/Chinese) with easy toggle
 - 📱 Responsive design for all devices
 - 🎨 Two themes: Dark and Light
@@ -28,6 +28,15 @@ Both versions include EN/CN language toggle.
 - CSS-based language switching
 - Optimized for performance
 
+## Statistics
+
+- **206** Total Commits (GitHub Search API)
+- **145** Total PRs
+- **71%** Merge Rate
+- **37** Repositories
+- **44** Code Reviews
+- **7+ Years** of contributions (2019-present)
+
 ---
 
-Generated from GitHub PR data (2019-2025) | 基于 GitHub PR 数据生成（2019-2025）
+Generated from GitHub data (2019-present) | 基于 GitHub 数据生成（2019-至今）
